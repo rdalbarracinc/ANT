@@ -1,0 +1,78 @@
+import os
+import csv
+from collections import Counter
+
+# Funcion para buscar el valor de TIPOLOGiA DOCUMENTAL a partir del SUFIJO en un archivo CSV
+def buscar_tipologia_en_csv(sufijo_buscar):
+    with open(r'C:\Users\rdalb\Documents\ANT\ANTx\Noviembre\tipologias.csv', 'r', newline='') as archivo_csv:
+        reader = csv.DictReader(archivo_csv)
+        for row in reader:
+            if row['SUFIJO'] == sufijo_buscar:
+                return row['TIPOLOGiA DOCUMENTAL']
+    return "No encontrado"
+
+# Funcion para eliminar todo antes y despues del guion bajo (_) incluyendo el guion y los numeros
+def eliminar_todo_antes_despues(cadena):
+    partes = cadena.split("_")
+    sin_numeros = ''.join([i for i in partes[1] if not i.isdigit()])
+    return sin_numeros[:-2] if sin_numeros[-2:].isdigit() else sin_numeros
+
+# Funcion para procesar carpetas recursivamente
+def procesar_carpetas(ruta_carpeta):
+    inventario = Counter()  # Inicializar el contador de inventario
+    informe = []  # Lista para almacenar los resultados del informe
+
+    for dirpath, dirnames, filenames in os.walk(ruta_carpeta):
+        for nombre_archivo in filenames:
+            sufijo = nombre_archivo.split(".")[0]  # Obtener el sufijo antes del punto
+            sufijo_procesado = eliminar_todo_antes_despues(sufijo)
+            tipologia = buscar_tipologia_en_csv(sufijo_procesado)
+            
+            if sufijo.startswith("PC"):
+                tipologia = "puntos_de_control"
+            
+            inventario[tipologia] += 1
+
+    # Imprimir el inventario en formato vertical
+    for tipologia, cantidad in inventario.items():
+        print(f"{cantidad} {tipologia}")
+        informe.append(f"{cantidad} {tipologia}")
+
+    condiciones = [
+        ("Acta_colindancia", 1),
+        ("Certificado_uso_suelo", 1),
+        (["Croquis de campo", "Croquis_topografico", "Croquis_construccion de campo"], 1),
+        (["imagen_construccion_no_convencional", "imagen_construccion_acabados", "imagen_construccion_fachada", "imagen_construccion_estructura", "imagen_construccion_bano2", "imagen_construccion_cocina", "imagen_construccion_cercha", "imagen_construccion_lote"], 1),
+        ("vectores", 1),
+        ("puntos_de_control", 1),
+        ("Cedula_ciudadania_solicitante", 1),
+        (["Acreditacion_vida_digna", "Acta", "Acta_audiencia_publica", "Acta_colindancia", "Acta_colindancia_Catastrales", "Acta_conciliacion", "Acta_conformacion_baldios_inadjudicables", "Acta_de_archivo", "Acta_entrega_material_predio", "Acta_exposicion_resultados", "Acta_instalacion_mesa_tecnica", "Acta_medicacion_conflicto_uso_tenencia_tierra", "Acta_nocomparecencia_audiencia", "Acta_ordenamiento_propiedad_viabilidad", "Acta_posesion", "Acta_recepcion_informacion", "Acta_reunion", "Acta_verificacion_oposicion", "Acto_administrativo", "Acto_admi_traslado_competencia", "Acto_administrativo_apertura", "Acto_administrativo_cierre", "Acto_administrativo_negacion", "Acto_administrativo_op", "Acto_administrativo_recurso", "Acto_administrativo_resuelve_recurso", "Acto_administrativo_restitucion_tierras", "Acto_constitutivo_sociedad", "Acuerdo", "Acuerdo_Interinstitucional", "Analisis_predial_integral", "Anexo_documental", "Archivo_crudo", "Archivo_Rinex", "Autorizacion", "Autorizacion_Conyuge", "Autorizacion_Reso", "Autorizacion_Terceros", "Avaluo", "Bases de datos", "Boletin_Academico", "Cartografia_social", "Decreto", "Documento identificacion", "Cedula_cafetera", "Cedula_campesina", "Cedula_ciudadania", "Cedula_ciudadania_companero_permante_conyuge", "Cedula_ciudadania_apoderado", "Cedula_ciudadania_declarante", "Cedula_ciudadania_nucleo_familiar", "Cedula_ciudadania_vendedor", "Cedula_ciudadania_comprador", "Contrasena", "Cedula_ciudadania", "Tarjeta_identidad", "Libreta_Militar", "Tarjeta_identidad", "Documento Privado", "Contrato_compraventa (Carta Venta)", "Contrato_otorgamiento", "Donacion", "Cesion", "Herencial", "Certificado ", "Certificacion_de_publicacion_de_citacion", "Certificado_vinculacion_asociacion_agropecuaria", "Certificado_vinculacion_Junta_accion_comunal", "Certificado_academico", "Certificado_aceptacion_linderos", "Certificado_aceptacion_vida_digna", "Certificado_antecedentes", "Certificado_antecedentes_judiciales", "Certificado_antecedentes_disciplinario", "Certificado_antecedentes_medidas_correctivas", "Certificado_antecedentes_Fiscales", "Certificado_catastral", "Certificado_corporacion_autonoma_regional", "Certificado_defuncion", "Certificado_erradicador_cultivos_ilicitos", "Certificado_etnicos", "Certificado_existencia_representacion_legal ", "Certificado_experiencia_agropecuaria_acuicola_forestal_economia_cuidado", "Certificado_matrimonio", "Certificado_medico_incapacidad_permanente", "Certificado_parques_nacionales_naturales", "Certificado_paz_y_salvo", "Certificado_publicacion_apertura", "Certificado_Registraduria", "Certificado_registrales", "Certificado_regulacion_ocupacion", "Certificado_Seguridad_Social", "Certificado_sana_posesion", "Certificado_tiempo_lugar_domicilio", "Certificado_tradicion_libertad", "Certificado_uso_suelo", "Certificado_Victima_Conflicto_armado", "Certificado_Proceso_Pertinencia", "Circular", "Citacion", "Comunicacion oficial", "Comunicacion_fijacion_apertura", "Comunicacion_oficial_oposicion", "Comunicacion_oficial_desistimiento", "Comunicacion_oficial_autoridad_ambiental", "Comunicacion_oficial_carencia_registral", "Comunicacion_oficial_pozos_activos", "Comunicacion_oficial_explotacion_minera", "Comunicacion_oficial_solicitud_infomracion_implementacion_POSPR", "Peticion", "Demanda", "Derecho Peticion", "Queja", "Reclamo", "Sugerencia", "Solicitud", "Cancelacion_Embargo", "Cancelacio_ Hipoteca", "Concepto_Ambiental_Favorable", "Constancia", "Constancia de Imposibilidad de Localizacion", "Constancia_de_publicacion_por_aviso_", "Constancia_ejecutoria", "Constancia_fijacion_desfijacion_aviso", "Constancia_negativa_Formulario", "Constancia_notificacion", "Contrato", "Contrato_arrendamiento", "Contrato_prestacion_servicios", "Contrato_comodato", "Contrato_Permuta", "Croquis de campo", "Croquis_topografico", "Croquis_construccion de campo", "Cuadro_de_coordenadas", "Declaracion", "Declaracion_juramentada_o_extrajuicio", "Declaracion_renta_patrimonio", "Declaracion_Testigo_posesion", "Encuesta_economia_cuidado", "Escritura", "Estatutos", "Estudio_Factibilidad", "Ficha_caracterizacion_territorial", "Ficha_Predial", "Forma_metodologia_calculo_UAF_predial", "Forma_costos_establecimiento_produccion_bovina", "Forma_visita_inspeccion_ocular_agronomica", "Forma_estudio_titulos", "Forma_visita_predio", "Formato", "Formato_Escogencia_regimen", "Formulario_Calificacion", "Formulario_actualizacion_novedades", "Formulario_reso", "Formulario_colilla_FISO", "Fotografia", "Historia", "Historia_clinica", "Historia_crediticia", "Imagen", "Informe", "Informe_agronomica_suelo", "Informe_Caracterizacion_territorio", "Informe_posproceso", "Informe_seguimiento_monitoreo", "Informe_tecnico_juridico", "Listado_de_Asistencia", "Manifestacion_voluntad", "Mapa_actores_territoriales", "Memorando", "Nota", "Nota_Devolutiva", "Notificacion", "Orden_judicial", "Plan", "Plan de Ordenamiento Territorial", "Plan de Ordenamiento Social de La Propiedad Rural", "Plan_comunicacion", "Plan_intervencion_territorios", "Plan_POSPR_consolidado", "Plano", "Plano_de_ZHF_Rural", "Plano_de_ZHF_Urbana_", "Poder", "Publicacion", "Recibo", "Recibo_pago_impuestos", "Recibo_servicios_publicos", "Redaccion_Tecnica_Linderos", "Registro Civil", "Registro_civil_defuncion", "Registro_civil_matrimonio", "Registro_civil_nacimiento", "Registro_unico_tributario", "Reporte", "Reporte_de_Calidad_del_levantamiento_planimetrico_predial", "Reporte_Registro_unico_Empresarial", "Reporte_Puntaje_Sisben", "Reporte_valoracion_reso", "Reporte_Ventanilla_unica_registro", "Reporte_victima", "Reporte_Peritaje", "Reporte_registro_notariado", "Reporte_ Registro_unico_Afiliados-RUAF-SISPRO", "Reporte_Servicio_Ciudadano_ANT", "Resolucion", "Resolucion__de_programacion", "Resolucion_conjunta", "Resolucion_licencia_de_division", "Resolucion_adjudicacion", "Sentencia_judicial", "Solicitud_titulacion_baldios_entidades_derecho_publico", "Ofcio_formalizacion_entidades_derecho_publico"], 1),
+    ]
+
+    informe.append("-" * 50)  # Linea de guiones para separar el inventario del informe
+
+    for condicion in condiciones:
+        if isinstance(condicion[0], list):
+            if any(item in inventario.keys() for item in condicion[0]) and sum(inventario.get(item, 0) for item in condicion[0]) >= condicion[1]:
+                informe.append("MIGRADA")
+            else:
+                informe.append("NO_MIGRADA")
+        else:
+            if condicion[0] in inventario and inventario[condicion[0]] >= condicion[1]:
+                informe.append("MIGRADA")
+            else:
+                informe.append("NO_MIGRADA")
+
+    # Imprimir el informe
+    print("\n".join(informe))  # Imprimir el informe en formato vertical
+    print("-" * 50)  # Linea de guiones para separar el informe del resumen en una sola linea
+    print(", ".join(informe))  # Imprimir el informe en una sola linea con comas
+    print("-" * 50)
+
+# Ruta de la carpeta raiz que contiene las subcarpetas
+ruta_raiz = r'C:\Users\rdalb\Documents\ANT\ANTx\Noviembre\Cordoba_1\Expedientes nuevos\13212070000000015A047200000000'
+
+try:
+    procesar_carpetas(ruta_raiz)
+except Exception as e:
+    print(f"Error: {str(e)}")
