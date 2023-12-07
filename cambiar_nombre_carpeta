@@ -1,0 +1,119 @@
+import os
+
+np = '13212070000000015A047200000000'
+
+diccionario = {
+    'Colindancia': np + '_' + '_AC',
+    'Acabados': np + '_' + 'A_ACA',
+    'Estructura': np + '_' + 'A_EST',
+    'Fachada': np + '_' + '_A_FAC',
+    'Croquis_Digital_': np + '_' + 'CQC',
+    'Cartera_Digital_': np + '_' + 'CQC',
+    'Croquis_Construcción': np + '_' + 'CQC_R',
+    'Cartera_Construcción': np + '_' + 'CQC_R',
+    'Cartera_Levantamiento': np + '_' + 'CQC_T',
+    'Croquis_Levantamiento': np + '_' + 'CQC_T',
+    'Cédula de Ciudadanía del Cónyuge': np + '_CCC',
+    'Cedula de ciudadania del cónyuge': np + '_CCC',
+    'Cédula de Ciudadanía del Solicitante': np + '_CCS',
+    'Cédula de Ciudadanía del Aspirante': np + '_CCS',
+    'Tarjeta de identidad de nucleo familiar': np + '_CTSTI',
+    'Registro civil de Nacimiento del Núcleo Familiar': np + '_RCN',
+    'Colilla Fiso': np + '_FISO',
+    'Citación Jornada Fiso': np + '_CITA',
+    'Citación jornada FISO': np + '_CITA',
+    'Autorización Cónyuge o Compañero Permanente': np + '_AUT',
+    'Autorización para consulta en base de datos': np + '_AUT',
+    'Antecedentes Judiciales (Policía) –Solicitante': np + '_CTANJS',
+    'Antecedentes Judiciales (Policía) –Cónyuge': np + '_CTANJC',
+    'Antecedentes judiciales (Policía) - SolicitantE': np + '_CTANJS',
+    'Antecedentes judiciales (Policía) - Cónyuge': np + '_CTANJC',
+    'Registraduría Nacional del Estado Civil – Solicitante': np + '_CTRS',
+    'Registraduría Nacional del Estado Civil – Cónyuge': np + '_CTRC',
+    'Registraduría Nacional del Estado Civil - Solicitante': np + '_CTRS',
+    '15.Registraduría Nacional del Estado Civil - Cónyuge': np + '_CTRC',
+    'Antecedentes Disciplinarios (Procuraduría General de la Nación) –Solicitante': np + '_CTANDS',
+    'Antecedentes Disciplinarios (Procuraduría General de la Nación) –Cónyuge': np + '_CTANDC',
+    'Antecedentes disciplinarios (Procuraduría General de la Nación) - Solicitante': np + '_CTANDS',
+    'Antecedentes disciplinarios (Procuraduría General de la Nación) - Cónyuge': np + '_CTANDC',
+    'Antecedentes Fiscales (Contraloría General de la Nación) - Solicitante': np + '_CTANFS',
+    'Antecedentes Fiscales (Contraloría General de la Nación) - Cónyuge': np + '_CTANFC',
+    'Antecedentes fiscales (Contraloría General de la Nación) – Solicitante': np + '_CTANFS',
+    'Antecedentes fiscales (Contraloría General de la Nación) - Cónyuge': np + '_CTANFC',
+    'Certificado Uso del Suelo': np + '_CTUS',
+    'SISBEN - Consulta de Puntaje - Solicitante': np + '_RPSS',
+    'SISBEN - Consulta de Puntaje - Cónyuge': np + '_RPSC',
+    'SISBEN - Consulta de Clasificación - Solicitante': np + '_RPSS',
+    'SISBEN - Consulta de Clasificación - Cónyuge': np + '_RPSC',
+    'Manifestación de voluntad': np + '_MV'
+}
+
+diccionario_carpetas_principales = {
+    'ACTA DE COLINDANCIA': '1. ACTA DE COLINDANCIA',
+    'ARCHIVO FOTOGRAFICO': '2. ARCHIVO FOTOGRAFICO',
+    'CROQUIS': '3. CROQUIS',
+    'SOPORTES JURIDICOS': '4. SOPORTES JURIDICOS',
+    'SOPORTES JURÍDICOS': '4. SOPORTES JURIDICOS',
+}
+
+diccionario_carpetas_FOTOGRAFICO = {
+    'IMAGENES DE CONSTRUCCIONES': '1. CONSTRUCCIONES',
+    'IMAGENES DE LOS VERTICES DEL PREDIO': '3. VERTICES DEL PREDIO',
+    'IMAGENES DE REFERENCIA DE LOS PUNTOS DE CONTROL': '2. PUNTOS DE CONTROL',
+}
+
+diccionario_carpetas_JURIDICOS = {
+    'DOCUMENTOS DE IDENTIFICACION': '1. DOCUMENTOS IDENTIFICACION',
+    'DOCUMENTOS DE IDENTIFICACIÓN': '1. DOCUMENTOS IDENTIFICACION',
+    'FUENTES DOCUMENTALES': '2. FUENTES DOCUMENTALES',
+}
+
+carpeta = r'C:\Users\rdalb\Documents\ANT\ANTx\Noviembre\Cordoba_1\Expedientes nuevos\13212070000000015A047200000000'
+
+def renombrar_carpeta(ruta_antigua_carpeta, nueva_carpeta):
+    # Renombrar la carpeta
+    os.rename(ruta_antigua_carpeta, nueva_carpeta)
+    print(f'Renombrada carpeta: {ruta_antigua_carpeta} -> {nueva_carpeta}')
+
+def renombrar_archivo(ruta_antigua, nuevo_nombre):
+    # Renombrar el archivo
+    os.rename(ruta_antigua, nuevo_nombre)
+    print(f'Renombrado archivo: {ruta_antigua} -> {nuevo_nombre}')
+
+def iterar_y_renombrar_carpeta(directorio, diccionario_carpetas):
+    for directorio_actual, carpetas, archivos in os.walk(directorio):
+        for nombre_carpeta in carpetas:
+            for clave, valor in diccionario_carpetas.items():
+                if clave in nombre_carpeta:
+                    # Construir la ruta completa de la carpeta antigua y la nueva
+                    ruta_antigua_carpeta = os.path.join(directorio_actual, nombre_carpeta)
+                    nueva_carpeta = os.path.join(directorio_actual, valor)
+
+                    # Renombrar la carpeta
+                    renombrar_carpeta(ruta_antigua_carpeta, nueva_carpeta)
+
+                    break  # Romper el bucle si se encontró una coincidencia para evitar reemplazos múltiples
+
+        for nombre_archivo in archivos:
+            # Obtener la extensión del archivo
+            _, extension = os.path.splitext(nombre_archivo)
+
+            # Construir el nuevo nombre del archivo sin la extensión
+            nombre_sin_extension, _ = os.path.splitext(nombre_archivo)
+
+            for clave, valor in diccionario.items():
+                if clave in nombre_sin_extension:
+                    # Construir la ruta completa del archivo antiguo y el nuevo
+                    ruta_antigua = os.path.join(directorio_actual, nombre_archivo)
+                    nuevo_nombre = valor + extension
+                    ruta_nueva = os.path.join(directorio_actual, nuevo_nombre)
+
+                    # Renombrar el archivo
+                    renombrar_archivo(ruta_antigua, ruta_nueva)
+
+                    break  # Romper el bucle si se encontró una coincidencia para evitar reemplazos múltiples
+
+# Iterar y renombrar todas las carpetas y subcarpetas
+iterar_y_renombrar_carpeta(carpeta, diccionario_carpetas_principales)
+iterar_y_renombrar_carpeta(os.path.join(carpeta, diccionario_carpetas_principales['ARCHIVO FOTOGRAFICO']), diccionario_carpetas_FOTOGRAFICO)
+iterar_y_renombrar_carpeta(os.path.join(carpeta, diccionario_carpetas_principales['SOPORTES JURIDICOS']), diccionario_carpetas_JURIDICOS)
