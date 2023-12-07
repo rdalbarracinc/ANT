@@ -1,0 +1,180 @@
+import os
+
+np = '13212070000000015A047200000000'
+
+diccionario = {
+    'Colindancia': np + '_AC',
+    'Acabados': np + '_' + 'A_ACA',
+    'ACABADOS': np + '_' + 'A_ACA',
+    'Estructura': np + '_' + 'A_EST',
+    'ESTRUCTURA': np + '_' + 'A_EST',
+    'Fachada': np + '_' + '_A_FAC',
+    'FACHADA': np + '_' + '_A_FAC',
+    'Enramada': np + '_' + '_A_CER',
+    'ENRAMADA': np + '_' + '_A_CER',
+    'Cocina': np + '_' + '_A_COC',
+    'COCINA': np + '_' + '_A_COC',
+    'Baño': np + '_' + '_A_BAN',
+    'BAÑO': np + '_' + '_A_BAN',
+    'Croquis_Digital': np + '_' + 'CQC',
+    'Cartera_Digital': np + '_' + 'CQC',
+    'Croquis_Construcción': np + '_' + 'CQC_R',
+    'Croquis_Construccion': np + '_' + 'CQC_R',
+    'Cartera_Construcción': np + '_' + 'CQC_R',
+    'Cartera_Levantamiento': np + '_' + 'CQC_T',
+    'Croquis_Levantamiento': np + '_' + 'CQC_T',
+    'Cédula de Ciudadania del Cónyuge': np + '_CCC',
+    'Cedula de ciudadania del cónyuge': np + '_CCC',
+    'Cedula de ciudadania de cónyuge': np + '_CCC',
+    '.Cedula de ciudadania de solicitante': np + '_CCC',
+    'Cédula de Ciudadania del Solicitante': np + '_CCS',
+    'Cedula de ciudadania del Solicitante': np + '_CCS',
+    'Cedula de ciudadania del solicitante': np + '_CCS',
+    'Cédula de Ciudadanía del Solicitante': np + '_CCS',
+    'Cedula de ciudadanía del solicitante': np + '_CCS',
+    'Cedula de ciudadanía del solicitante': np + '_CCS',
+    'CÉdula de ciudadania de nucleo familiar': np + '_CCNF',
+    'Cedula de ciudadania de nucleo familiar': np + '_CCNF',
+    'Tarjeta de Identidad del Nucleo Familiar': np + '_CTSTI',
+    'Tarjeta de identidad nucleo familiar 1': np + '_CTSTI01',
+    'Tarjeta de identidad nucleo familiar 2': np + '_CTSTI02',
+    'Tarjeta de identidad nucleo familiar 3': np + '_CTSTI03',
+    'Tarjeta de identidad de nucleo familiar 1': np + '_CTSTI01',
+    'Tarjeta de identidad de nucleo familiar 2': np + '_CTSTI02',
+    'Tarjeta de identidad de nucleo familiar 3': np + '_CTSTI03',
+    'Registro civil de Nacimiento del Nucleo Familiar': np + '_RCN',
+    'Registro civil de nucleo familiar': np + '_RCN',
+    'Contraseña nucleo familia': np + '_CTS',
+    'Colilla Fiso': np + '_FISO',
+    'Colilla FISO': np + '_FISO',
+    'Citación Jornada Fiso': np + '_CITA',
+    'Citación jornada FISO': np + '_CITA',
+    'Autorización Cónyuge o Compañero Permanente': np + '_AUT',
+    'Autorización para consulta en base de datos': np + '_AUT',
+    'Autorización consulta de base de datos': np + '_AUT',
+    'Autorización de consulta en base de datos': np + '_AUT',
+    'Antecedentes Judiciales (Policía) –Solicitante': np + '_CTANJS',
+    'Antecedentes Judiciales (Policía) –Cónyuge': np + '_CTANJC',
+    'Antecedentes judiciales (Policía) - Solicitante': np + '_CTANJS',
+    'Antecedentes judiciales (Policía) - Cónyuge': np + '_CTANJC',
+    'Antecedentes Judiciales ( Policía ) – Solicitante': np + '_CTANJS',
+    'Registraduría Nacional del Estado Civil – Solicitante': np + '_CTRS',
+    'Registraduría Nacional del Estado Civil – Cónyuge': np + '_CTRC',
+    'Registraduría Nacional del Estado Civil - Solicitante': np + '_CTRS',
+    'Registraduría Nacional del Estado Civil - Cónyuge': np + '_CTRC',
+    'Registraduría Nacional del Estado Civil -  Solicitante': np + '_CTRS',
+    'Antecedentes Disciplinarios (Procuraduría General de la Nación) –Solicitante': np + '_CTANDS',
+    'Antecedentes Disciplinarios (Procuraduría General de la Nación) –Cónyuge': np + '_CTANDC',
+    'Antecedentes disciplinarios (Procuraduría General de la Nación) - Solicitante': np + '_CTANDS',
+    'Antecedentes Disciplinarios ( Procuraduría General de la Nación ) – Solicitante': np + '_CTANDS',
+    'Antecedentes disciplinarios (Procuraduría General de la Nación) - Cónyuge': np + '_CTANDC',
+    'Antecedentes Fiscales (Contraloría General de la Nación) - Solicitante': np + '_CTANFS',
+    'Antecedentes Fiscales (Contraloría General de la Nación) - Cónyuge': np + '_CTANFC',
+    'Antecedentes fiscales (Contraloría General de la Nación) – Solicitante': np + '_CTANFS',
+    'Antecedentes Fiscales ( Contraloría General de la Nación ) - Solicitante': np + '_CTANFS',
+    'Antecedentes fiscales (Contraloría General de la Nación) Solicitante': np + '_CTANFS',
+    'Antecedentes fiscales (Contraloría General de la Nación) - Cónyuge': np + '_CTANFC',
+    'Antecedentes fiscales (Contraloría General de la Nación) Cónyuge': np + '_CTANFC',
+    'Certificado Uso del Suelo': np + '_CTUS',
+    'Certificado de Uso del Suelo': np + '_CTUS',
+    'SISBEN - Consulta de Puntaje - Solicitante': np + '_RPSS',
+    'SISBEN - Consulta de Puntaje - Cónyuge': np + '_RPSC',
+    'SISBEN - Consulta de Clasificación - Solicitante': np + '_RPSS',
+    'SISBEN - Consulta de Clasificación - Cónyuge': np + '_RPSC',
+    'SISBEN - consulta de puntaje Cónyuge': np + '_RPSC',
+    'SISBEN - Consulta de Clasificación- Solicitante': np + '_RPSS',
+    'SISBEN - consulta de puntaje Solicitante': np + '_RPSS',
+    'Constancia de Imposibilidad de Localización de Usuario': np + '_CTIL',
+    'Constancia Imposibilidad de Localización de Usuario': np + '_CTIL',
+    'Recibo de servicio publico': np + '_RSP',
+    'Contrato de compraventa': np + '_DCPP',
+    'Compraventa': np + '_DCPP',
+    'Documento privado de venta': np + '_DCPP',
+    'Manifestación de voluntad': np + '_MV',
+    'Registro civil de matrimonio': np + '_RCM',
+    'Escritura publica': np + '_EP',
+    'Escritura pública': np + '_EP',
+    'Constancia de no comparecencia': np + '_CST',
+    'Lineamiento ANT ': np + '_FORE',
+    'Informe general': np + '_INF',
+    'Declaración testigos testimonios de posesión': np + '_DTCP',
+    'Declaración testigos testimonios de posesión 1': np + '_DTCP01',
+    'Declaración testigos testimonios de posesión 2': np + '_DTCP02',
+    'Certificado Uso de suelo': np + '_CTUS',
+    'Sentencia Primera Instancia Tacamocho': np + '_SJ01',
+    'Sentencia Segunda Intencia Tacamocho': np + '_SJ02',
+    'PNUD_FSR-0027-SPO Respuesta Ampliación Concepto Ruta Tacamocho': np + '_FORE' ,
+    'Certificado Uso de suelo UIT - Tacamocho': np + '_CTUS',
+    '2. Sentencia Segunda Intencia Tacamocho': np + '_SJ02',
+    '3. PNUD_FSR-0027-SPO Respuesta Ampliación Concepto Ruta Tacamocho': np + '_FORE',
+    '4. Solicitud Certificados Carencias Registrales RAD.20212100573451': np + '_CMOST01',
+    '5. Solicitud Certificados Catastrales RAD.20212100573031': np + '_CMOST02',
+    '6. Certificado Uso de suelo UIT - Tacamocho 09.06.2021': np + '_CTUS',
+    '1. Escritura Publica N° 301 de 2005': np + '_EP',
+    '6. Solicitud Certificados Carencias Registrales RAD.20212100573451': np + '_EP',
+    '7. Solicitud Certificados Catastrales RAD.20212100573031': np + '_CMOST01',
+    '8. Solicitud de certificados y fichas catastrales Rad. 20212100616081': np + '_CMOST01',
+    '9. Solicitud de Certificados de Carencia de Antecedentes registrales Rad. 20212100616121': np + '_CMOST03',
+    'GPS': np + '_PC',
+    '5. Solicitud Certificados Carencias Registrales RAD.20212100573451': np + '_CMOST01',
+    '6. Solicitud Certificados Catastrales RAD.20212100573031': np + '_CMOST02',
+    '10.Manifestación de Voluntad Cónyuge': np + '_MV',
+    '12.Declaraciones Testigos Testimonio Posesión 1': np + '_DTCP01',
+    '12.Declaraciones Testigos Testimonio Posesión 2': np + '_DTCP02',
+    '14.Proyecto Oficio Orip de El Carmen de Bolívar Unificado': np + '_CMOST01',
+    '7.Acuerdo No. 57 de 2018 - Zona de Reserva Campesina': np + '_ADAA',
+    '8.Oficio a Igac Bogotá Rad.20212101591001': np + '_CMOST02'
+}
+
+
+diccionario_carpetas = {
+    'ACTA DE COLINDANCIA': '1. ACTA DE COLINDANCIA',
+    'ARCHIVO FOTOGRAFICO': '2. ARCHIVO FOTOGRAFICO',
+    'IMAGENES DE CONSTRUCCIONES': '1. CONSTRUCCIONES',
+    'IMAGENES DE LOS VERTICES DEL PREDIO': '3. VERTICES DEL PREDIO',
+    'IMAGENES DE REFERENCIA DE LOS PUNTOS DE CONTROL': '2. PUNTOS DE CONTROL',
+    'CROQUIS': '3. CROQUIS',
+    'SOPORTES JURIDICOS': '4. SOPORTES JURIDICOS',
+    'DOCUMENTOS DE IDENTIFICACION': '1. DOCUMENTOS IDENTIFICACION',
+    'DOCUMENTOS DE IDENTIFICACIÓN': '1. DOCUMENTOS IDENTIFICACION',
+    'FUENTES DOCUMENTALES': '2. FUENTES DOCUMENTALES'
+}
+
+carpeta = r'C:\Users\rdalb\Documents\ANT\ANTx\Noviembre\Cordoba_1\Expedientes nuevos\13212070000000015A047200000000'
+
+# Iterar por cada carpeta en la carpeta principal y subcarpetas
+for directorio_actual, carpetas, archivos in os.walk(carpeta):
+    for nombre_carpeta in carpetas:
+        for clave, valor in diccionario_carpetas.items():
+            if clave in nombre_carpeta:
+                # Construir la ruta completa de la carpeta antigua y la nueva
+                ruta_antigua_carpeta = os.path.join(directorio_actual, nombre_carpeta)
+                nueva_carpeta = os.path.join(directorio_actual, valor)
+
+                # Renombrar la carpeta
+                os.rename(ruta_antigua_carpeta, nueva_carpeta)
+
+                print(f'Renombrada carpeta: {nombre_carpeta} -> {valor}')
+                break  # Romper el bucle si se encontró una coincidencia para evitar reemplazos múltiples
+
+# Iterar por cada archivo en la carpeta y subcarpetas
+for directorio_actual, carpetas, archivos in os.walk(carpeta):
+    for nombre_archivo in archivos:
+        # Obtener la extensión del archivo
+        _, extension = os.path.splitext(nombre_archivo)
+
+        # Construir el nuevo nombre del archivo sin la extensión
+        nombre_sin_extension, _ = os.path.splitext(nombre_archivo)
+
+        for clave, valor in diccionario.items():
+            if clave in nombre_sin_extension:
+                # Construir la ruta completa del archivo antiguo y el nuevo
+                ruta_antigua = os.path.join(directorio_actual, nombre_archivo)
+                nuevo_nombre = valor + extension
+                ruta_nueva = os.path.join(directorio_actual, nuevo_nombre)
+
+                # Renombrar el archivo
+                os.rename(ruta_antigua, ruta_nueva)
+
+                print(f'Renombrado archivo: {nombre_archivo} -> {nuevo_nombre}')
+                break  # Romper el bucle si se encontró una coincidencia para evitar reemplazos múltiples
