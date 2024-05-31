@@ -1,0 +1,136 @@
+# Este codigo imprime busca el numero predial de 30 digital
+# e imprime el nombre en r1
+# matricula inmobiliaria en r2
+# has y objeto_osp en api_predial
+# todas las anotaciones respecto del predial
+
+import pandas as pd
+
+def buscar_numero_predial_R1(numero_predial):
+    archivo = r'C:\Users\rdalb\Documents\ANT\MTJ\Registro_1.ods'
+    try:
+        df = pd.read_excel(archivo)
+    except FileNotFoundError:
+        print("Archivo no encontrado.")
+        return pd.DataFrame()
+    except Exception as e:
+        print("Error al leer el archivo:", e)
+        return pd.DataFrame()
+
+    resultado1 = df[df['NUMERO_PREDIAL'] == numero_predial]['NOMBRE']
+
+    if not resultado1.empty:
+        print("Nombre en R1:", resultado1.values[0])
+    else:
+        print("Número predial no encontrado en el registro.")
+
+    return resultado1
+
+def buscar_numero_predial_R2(numero_predial):
+    archivo = r'C:\Users\rdalb\Documents\ANT\MTJ\Registro_2.ods'
+    try:
+        df = pd.read_excel(archivo)
+    except FileNotFoundError:
+        print("Archivo no encontrado.")
+        return pd.DataFrame()
+    except Exception as e:
+        print("Error al leer el archivo:", e)
+        return pd.DataFrame()
+
+    resultado2 = df[df['NUMERO_PREDIAL'] == numero_predial][['MATRICULA_INMOBILIARIA', 'NUMERO_PREDIAL_ANTERIOR']]
+
+    if not resultado2.empty:
+        print("Matrícula inmobiliaria en R2:", resultado2.values[0])
+    else:
+        print("Número predial no encontrado en el registro.")
+
+    return resultado2 
+
+def buscar_numero_predial_API_PREDIAL_SHP(numero_predial):
+    archivo = r'C:\Users\rdalb\Documents\ANT\MTJ\Predios_API.ods'
+    try:
+        df = pd.read_excel(archivo)
+    except FileNotFoundError:
+        print("Archivo no encontrado.")
+        return pd.DataFrame()
+    except Exception as e:
+        print("Error al leer el archivo:", e)
+        return pd.DataFrame()
+
+    resultadoAPI = df[df['NUMERO_PREDIAL'] == numero_predial][['HAS', 'objeto_osp','naturaleza','relacion_t','objeto_osp']]
+
+    if not resultadoAPI.empty:
+        print("HAS y objeto_osp en API Predial:")
+        print(resultadoAPI.to_string(index=False))
+    else:
+        print("Número predial no encontrado en el registro.")
+    
+    return resultadoAPI
+
+def buscar_num_matricula_SNR(matricula):
+    archivo = r'C:\Users\rdalb\Documents\ANT\MTJ\Base_Registral_Snr.ods'
+    try:
+        df = pd.read_excel(archivo)
+    except FileNotFoundError:
+        print("Archivo no encontrado.")
+        return pd.DataFrame()
+    except Exception as e:
+        print("Error al leer el archivo:", e)
+        return pd.DataFrame()
+
+    resultadoAPI = df[df['MATRICULA'] == matricula][['TIPO_DOCUMENTO', 'NUMERO_DOCUMENTO','FECHA_DOCUMENTO','OFICINA_ORIGEN','ESPECIFICACION','NOMBRES','PROPIETARIO','CABIDA_LINDERO']]
+
+    if not resultadoAPI.empty:
+        print("TIPO_DOCUMENTO, NUMERO_DOCUMENTO, FECHA_DOCUMENTO, OFICINA_ORIGEN, ESPECIFICACION, NOMBRES, PROPIETARIO, CABIDA_LINDERO:")
+        print(resultadoAPI.to_string(index=False))
+    else:
+        print("Matrícula inmobiliaria no encontrado en el registro.")
+    
+    return resultadoAPI
+
+# Las funciones de búsqueda van aquí, tal como las definiste
+
+import pandas as pd
+
+# Aquí van las funciones de búsqueda definidas anteriormente
+
+def exportar_resultados_a_csv(resultado_R1, resultado_R2, resultado_API, resultado_SNR):
+    """
+    Exporta los resultados a un archivo CSV.
+    """
+    # Convertir resultado_API a lista si no está vacío
+    if not resultado_API.empty:
+        resultado_API_lista = resultado_API["objeto_osp"].values.tolist()
+    else:
+        resultado_API_lista = []
+
+    # Crear un diccionario con los datos a exportar
+    datos = {
+        "Nombre en R1": resultado_R1.values.tolist() if not resultado_R1.empty else [],  
+        "Matrícula inmobiliaria en R2": resultado_R2.values.tolist() if not resultado_R2.empty else [],  
+        "HAS en API Predial": resultado_API["HAS"].tolist() if not resultado_API.empty else [],  
+        "objeto_osp en API Predial": resultado_API_lista,
+        # Agrega más columnas según sea necesario
+    }
+
+    # Crear un DataFrame a partir del diccionario
+    df = pd.DataFrame(datos)
+
+    # Exportar DataFrame a CSV
+    df.to_csv("resultados.csv", index=False)
+
+def main():
+    numero_predial = input("Ingrese el número predial alfanumérico de 30 caracteres: ")
+
+    resultado_R1 = buscar_numero_predial_R1(numero_predial)
+    resultado_R2 = buscar_numero_predial_R2(numero_predial)
+    resultado_API = buscar_numero_predial_API_PREDIAL_SHP(numero_predial)
+    if not resultado_R2.empty:
+        resultado_SNR = buscar_num_matricula_SNR(resultado_R2.values[0][0])
+    else:
+        resultado_SNR = pd.DataFrame()
+
+    exportar_resultados_a_csv(resultado_R1, resultado_R2, resultado_API, resultado_SNR)
+
+if __name__ == "__main__":
+    main()
