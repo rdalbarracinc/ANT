@@ -1,0 +1,37 @@
+# Este codigo crea un mapa del estado de avance del prediagnostico del
+# equipo catastral
+
+import geopandas as gpd
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Definir las rutas a los archivos
+ruta_UIT = r"C:\Users\rdalb\Documents\ANT\Cartografía\UIT.shp"
+ruta_API = r"C:\Users\rdalb\Documents\ANT\Cartografía\API_PREDIOS.shp"
+ruta_CSV = r"C:\Users\rdalb\Documents\ANT\Mayo 2024\informe17052024v4.csv"
+
+# Cargar los archivos shapefile
+UIT = gpd.read_file(ruta_UIT)
+API = gpd.read_file(ruta_API)
+
+# Cargar el archivo CSV y realizar el join
+CSV = pd.read_csv(ruta_CSV)
+API_join = API.merge(CSV, left_on='numero_pre', right_on='numero_predial', how='left')
+
+# Configurar el estilo del mapa
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# Verificar el nombre correcto de la columna para el mapa
+columna_mapa = 'Estado del diagnóstico técnico'  # Corregido el nombre de la columna
+
+# Graficar el mapa
+API_join.plot(column=columna_mapa, cmap='Spectral_r', legend=True, ax=ax)
+
+# Agregar el shapefile UIT.shp como fondo transparente con línea negra
+UIT.plot(ax=ax, edgecolor='black', facecolor='none', zorder=0)
+
+# Añadir título al mapa
+plt.title("AVANCE PREDIAGNÓSTICO EQUIPO CATASTRAL", fontsize=16)
+
+# Mostrar el mapa
+plt.show()
