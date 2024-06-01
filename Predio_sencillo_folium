@@ -1,0 +1,58 @@
+#Este codigo para ser leído desde colab depliega el predio con un trasfondo de
+# imaghen satelite de google maps
+
+# ESRI world imaginery
+
+import geopandas as gpd
+import folium
+from IPython.display import display, HTML
+
+# Subir archivos al entorno de ejecución (si es necesario)
+# from google.colab import files
+# uploaded = files.upload()
+
+# Ruta al archivo Shapefile
+ruta_shapefile = '184100002000000020023000000000.shp'
+
+# Cargar el Shapefile
+gdf = gpd.read_file(ruta_shapefile)
+
+# Verificar y, si es necesario, reproyectar el CRS del GeoDataFrame
+if gdf.crs != {'init': 'epsg:4326'}:
+    gdf = gdf.to_crs(epsg=4326)
+
+# Extraer la latitud y longitud de cada geometría
+gdf['lat'] = gdf.geometry.centroid.y
+gdf['lon'] = gdf.geometry.centroid.x
+
+# Calcular el centro del polígono
+centro_lat = gdf['lat'].mean()
+centro_lon = gdf['lon'].mean()
+
+# Crear un mapa de Folium centrado en el centro del polígono con vista satélite
+m = folium.Map(location=[centro_lat, centro_lon], zoom_start=12, tiles=None)
+
+# Añadir capa de Esri WorldImagery
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr='Esri',
+    name='Esri WorldImagery',
+    overlay=False
+).add_to(m)
+
+# Añadir capa GeoJson
+folium.GeoJson(
+    data=gdf.to_json(),
+    name="geojson",
+    style_function=lambda x: {'fillColor': 'transparent', 'color': 'black', 'weight': 2}
+).add_to(m)
+
+# Añadir un marcador en el centro del mapa
+folium.Marker(location=[centro_lat, centro_lon], popup='Centro del mapa').add_to(m)
+
+# Guardar el mapa como un archivo HTML temporal y desplegarlo
+m.save('mapa_folium.html')
+display(HTML('<iframe src="mapa_folium.html" width="100%" height="600"></iframe>'))
+
+# Mostrar el mapa directamente en la celda
+m
