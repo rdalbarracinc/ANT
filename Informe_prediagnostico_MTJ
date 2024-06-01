@@ -1,0 +1,559 @@
+# Este archivo facilita la creación de un informe
+# del estado de avance del prediagnostico juridico y catastral
+
+import pandas as pd
+
+# CARGAAS DATOS
+print("")
+print("========================")
+print("** PREDIAGNÓSTICO MTJ ++")
+print("========================")
+print("")
+
+# Leer el archivo CSV especificando el tipo de datos como cadena para las columnas con tipos mixtos
+df = pd.read_csv("C:/Users/rdalb/Documents/ANT/Mayo 2024/informe17052024v2.csv", dtype=str)
+
+# Mostrar las dos primeras filas del dataframe
+print(df.head(2))
+
+print(df.columns)
+
+
+################
+print("")
+print("=================================================")
+print("** INVENTARIO DE DATOS: INFORME PREDIAGNÓSTICO ++")
+print("=================================================")
+print("")
+#######################
+
+
+# Contar los valores 'q' según los filtros especificados por 'uit_operacion'
+con_fmi_con_num_predial_uit = df[(df['fmi'].notna()) & (df['numero_predial'].notna())]['uit_operacion'].count()
+con_fmi_sin_num_predial_uit = df[(df['fmi'].notna()) & (df['numero_predial'].isna())]['uit_operacion'].count()
+sin_fmi_con_num_predial_uit = df[(df['fmi'].isna()) & (df['numero_predial'].notna())]['uit_operacion'].count()
+sin_fmi_sin_num_predial_uit = df[(df['fmi'].isna()) & (df['numero_predial'].isna())]['uit_operacion'].count()
+
+# Imprimir los resultados
+# Imprimir los resultados
+print("Con FMI y con número_predial:", con_fmi_con_num_predial_uit)
+print("Con FMI y sin número_predial:", con_fmi_sin_num_predial_uit)
+print("Sin FMI y con número_predial:", sin_fmi_con_num_predial_uit)
+print("Sin FMI y sin número_predial:", sin_fmi_sin_num_predial_uit)
+
+#
+##########################################################3#####
+print("")
+print("===========================================")
+print("** AVANCE PREDIAGNÓSTICO EQUIPO CATASTRAL**")
+print("===========================================")
+print("")
+##################################################################3
+
+
+# Leer el archivo Excel y omitir la primera fila
+#df = pd.read_excel("/content/PREDIAGNOSTICO_LA MONTAÑITA_CAQUETA_20022024 COPIA SEGURIDAD 20032024.xlsx", skiprows=1)
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='Nombre UIT', columns='Estado del diagnóstico\ntécnico', aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      AVANCE PREDIAGNÓSTICO EQUIPO CATASTRAL")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** AVANCE PREDIAGNÓSTICO EQUIPO JURÍDICO**")
+print("===========================================")
+print("")
+##################################################################3
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns='ESTADO REVISIÓN', aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      AVANCE PREDIAGNÓSTICO EQUIPO JURÍDICO")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** CON FOLIO DE MATRICULA POR UIT **")
+print("===========================================")
+print("")
+##################################################################3
+# Filtrar los registros donde 'fmi' no es nulo
+df = df[df['fmi'].notna()]
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns='ESTADO REVISIÓN', aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      AVANCE PREDIAGNÓSTICO EQUIPO JURÍDICO")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** NATURALEZA DEL PREDIO: PÚBLICO BALDÍO **")
+print("===========================================")
+print("")
+##################################################################3
+
+
+#import pandas as pd
+
+# Leer el archivo Excel y omitir la primera fila
+#df = pd.read_excel("/content/PREDIAGNOSTICO_LA MONTAÑITA_CAQUETA_20022024 COPIA SEGURIDAD 20032024.xlsx", skiprows=1)
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns='Público Baldío', aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      NATURALEZA DEL PREDIO POR UIT")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** REQUERIMIENTO DE DOCUMENTOS ADICIONALES PARA CONFIRMACIÓN DE LA NATURALEZA DEL PREDIO POR UIT **")
+print("===========================================")
+print("")
+##################################################################3
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='Público Baldío', columns=['¿Se requiere documento para confirmar naturaleza del predio?',], aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      REQUERIMIENTO DE DOCUMENTOS ADICIONALES PARA CONFIRMACIÓN DE LA NATURALEZA DEL PREDIO POR UIT")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** TABLA PARA PUBLICO BALDIO **")
+print("===========================================")
+print("")
+##################################################################3
+# Obtener valores únicos de 'Público Baldío'
+valores_publico_baldio = df['Público Baldío'].unique()
+
+# Recorrer los valores únicos de 'Público Baldío' y crear una tabla para cada uno
+for publico_baldio in valores_publico_baldio:
+    # Filtrar el DataFrame por el valor de 'Público Baldío' actual
+    df_filtrado = df[df['Público Baldío'] == publico_baldio]
+
+    # Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por 'Nombre UIT' y '¿Se requiere documento para confirmar naturaleza del predio?'
+    tabla_dinamica = df_filtrado.pivot_table(index='uit_operacion', columns='¿Se requiere documento para confirmar naturaleza del predio?', aggfunc='size', fill_value=0)
+
+    # Agregar una columna para el total de cada fila
+    tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+    # Agregar una fila para el total de cada columna
+    tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+    # Renombrar las columnas
+    tabla_dinamica.columns.name = ''
+
+    # Mostrar el título de la tabla
+    print(f"Tabla para 'Público Baldío' = {publico_baldio}")
+    print("")
+    # Mostrar la tabla dinámica
+    print(tabla_dinamica)
+    print("\n" + "="*50 + "\n")
+
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** RELACIÓN DE TENENCIA **")
+print("===========================================")
+print("")
+##################################################################3
+
+import pandas as pd
+
+# Leer el archivo Excel y omitir la primera fila
+#df = pd.read_excel("/content/PREDIAGNOSTICO_LA MONTAÑITA_CAQUETA_20022024 COPIA SEGURIDAD 20032024.xlsx", skiprows=1)
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns='relacion_tenencia', aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      NATURALEZA DEL PREDIO POR UIT")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** **TIPO FUENTE (NATURALEZA JURIDICA PREDIO)** **")
+print("===========================================")
+print("")
+##############################################################
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns='TIPO FUENTE (NATURALEZA JURIDICA PREDIO)', aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      TIPO FUENTE (NATURALEZA JURIDICA PREDIO)")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("** *OBJETO OSPR* **")
+print("===========================================")
+print("")
+##############################################################
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns=['objeto_ospr',], aggfunc='size', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      REQUERIMIENTO DE DOCUMENTOS ADICIONALES PARA CONFIRMACIÓN DE LA NATURALEZA DEL PREDIO POR UIT")
+print("")
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("*NUMERO DE PREDIOS POR FOLIO DE MATRÍCULA Y NÚMERO CATASTRAL*")
+print("===========================================")
+print("")
+##############################################################
+
+# Filtrar los registros donde 'fmi' no es nulo
+df = df[df['fmi'].notna()]
+
+# Filtrar los registros donde 'fmi' no es nulo
+df = df[df['Número predial nacional (30 digitos)'].notna()]
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada estado del diagnóstico técnico por Nombre UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', columns='Q', aggfunc='count', fill_value=0)
+
+# Agregar una columna para el total de cada fila
+tabla_dinamica['Total Resultado'] = tabla_dinamica.sum(axis=1)
+
+# Agregar una fila para el total de cada columna
+tabla_dinamica.loc['Total Resultado'] = tabla_dinamica.sum()
+
+# Renombrar las columnas
+tabla_dinamica.columns.name = ''
+
+# Mostrar la tabla dinámica
+print("      FMI")
+print("")
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("'Número de FMI VS Número de Número Predial'")
+print("===========================================")
+print("")
+##############################################################
+# Filtrar los registros donde 'fmi' y 'Número predial nacional (30 digitos)' no son nulos
+df = df[df['fmi'].notna() & df['Número predial nacional (30 digitos)'].notna()]
+
+# Crear una tabla dinámica para contar el número de ocurrencias de cada FMI y Número predial por UIT
+tabla_dinamica = df.pivot_table(index='uit_operacion', aggfunc='count', fill_value=0,
+                                values=['fmi', 'Número predial nacional (30 digitos)'])
+
+# Renombrar las columnas
+tabla_dinamica.columns = ['Número de FMI', 'Número de Número Predial']
+
+# Mostrar la tabla dinámica
+print(tabla_dinamica)
+
+##########################################################3#####
+print("")
+print("===========================================")
+print("Número de registros por FMI y Número predial")
+print("===========================================")
+print("")
+##############################################################
+# Contar los registros donde 'fmi' y 'Número predial nacional (30 digitos)' no son nulos
+fmi_numero_predial = ((df['fmi'].notna()) & (df['Número predial nacional (30 digitos)'].notna())).sum()
+
+# Contar los registros donde 'fmi' es nulo sin 'Número predial nacional (30 digitos)' no es nulo
+no_fmi_si_numero_predial = ((df['fmi'].isna()) & (df['Número predial nacional (30 digitos)'].notna())).sum()
+
+# Contar los registros sin 'fmi' es nulo con 'Número predial nacional (30 digitos)' no es nulo
+no_fmi_si_numero_predial = ((df['fmi'].notna()) & (df['Número predial nacional (30 digitos)'].isna())).sum()
+
+# Contar los registros donde 'fmi' es nulo y 'Número predial nacional (30 digitos)' es nulo
+no_fmi_no_numero_predial = ((df['fmi'].isna()) & (df['Número predial nacional (30 digitos)'].isna())).sum()
+
+# Mostrar los resultados
+print(f"Número de registros con FMI y Número predial: {fmi_numero_predial}")
+print(f"Número de registros con FMI sin Número predial: {fmi_numero_predial}")
+print(f"Número de registros sin FMI pero con Número predial: {no_fmi_si_numero_predial}")
+print(f"Número de registros sin FMI y sin Número predial: {no_fmi_no_numero_predial}")
+
+################
+print("")
+print("=================================================")
+print("** INVENTARIO DE DATOS: INFORME PREDIAGNÓSTICO ++")
+print("=================================================")
+print("")
+#######################
+
+if 'Q' in df.columns:
+    # Acceder a la columna 'Q' aquí
+    # Por ejemplo:
+    con_fmi_con_num_predial_uit_con_nro_catastro = df[(df['fmi'].notna()) & (df['numero_predial'].notna()) & (df['NROCATASTRO'].notna())]['Q'].count()
+else:
+    print("La columna 'Q' no está presente en el DataFrame.")
+
+
+# Contar los valores 'q' según los filtros especificados por 'uit_operacion'
+con_fmi_con_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].notna())]['Q'].count()
+con_fmi_sin_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].notna())]['Q'].count()
+sin_fmi_con_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].notna())]['Q'].count()
+sin_fmi_sin_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].notna())]['Q'].count()
+# Contar los valores 'q' según los filtros especificados por 'uit_operacion'
+con_fmi_con_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].isna())]['Q'].count()
+con_fmi_sin_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].isna())]['Q'].count()
+sin_fmi_con_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].isna())]['Q'].count()
+sin_fmi_sin_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].isna())]['Q'].count()                                                      
+
+# Imprimir los resultados
+# Imprimir los resultados
+print("Con FMI y con número predial con nro catastro:", con_fmi_con_num_predial_uit_con_nro_catastro)
+print("Con FMI y sin número predial con nro catastro:", con_fmi_sin_num_predial_uit_con_nro_catastro)
+print("Sin FMI y con número predial con nro catastro:", sin_fmi_con_num_predial_uit_con_nro_catastro)
+print("Sin FMI y sin número predial con nro catastro:", sin_fmi_sin_num_predial_uit_con_nro_catastro)
+# Imprimir los resultados
+print("Con FMI y con número predial sin nro catastro:", con_fmi_con_num_predial_uit_sin_nro_catastro)
+print("Con FMI y sin número predial sin nro catastro:", con_fmi_sin_num_predial_uit_sin_nro_catastro)
+print("Sin FMI y con número predial sin nro catastro:", sin_fmi_con_num_predial_uit_sin_nro_catastro)
+print("Sin FMI y sin número predial sin nro catastro:", sin_fmi_sin_num_predial_uit_sin_nro_catastro)
+
+################
+print("")
+print("=================================================")
+print("** INVENTARIO DE DATOS: INFORME PREDIAGNÓSTICO SI O NO ++")
+print("=================================================")
+print("")
+#######################
+
+if 'Q' in df.columns:
+    # Acceder a la columna 'Q' aquí
+    # Por ejemplo:
+    con_fmi_con_num_predial_uit_con_nro_catastro = df[(df['fmi'].notna()) & (df['numero_predial'].notna()) & (df['NROCATASTRO'].notna())]['Q'].count()
+else:
+    print("La columna 'Q' no está presente en el DataFrame.")
+
+
+# Contar los valores 'q' según los filtros especificados por 'uit_operacion'
+con_fmi_con_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].notna())]['Q'].count()
+con_fmi_sin_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].notna())]['Q'].count()
+sin_fmi_con_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].notna())]['Q'].count()
+sin_fmi_sin_num_predial_uit_con_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].notna())]['Q'].count()
+# Contar los valores 'q' según los filtros especificados por 'uit_operacion'
+con_fmi_con_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].isna())]['Q'].count()
+con_fmi_sin_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].notna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].isna())]['Q'].count()
+sin_fmi_con_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].notna()) & (df['si_num_catastral'].isna())]['Q'].count()
+sin_fmi_sin_num_predial_uit_sin_nro_catastro = df[(df['si_fmi'].isna()) & (df['si_num_pred'].isna()) & (df['si_num_catastral'].isna())]['Q'].count()                                                      
+
+# Imprimir los resultados
+# Imprimir los resultados
+print("Con FMI y con número predial con nro catastro:", con_fmi_con_num_predial_uit_con_nro_catastro)
+print("Con FMI y sin número predial con nro catastro:", con_fmi_sin_num_predial_uit_con_nro_catastro)
+print("Sin FMI y con número predial con nro catastro:", sin_fmi_con_num_predial_uit_con_nro_catastro)
+print("Sin FMI y sin número predial con nro catastro:", sin_fmi_sin_num_predial_uit_con_nro_catastro)
+# Imprimir los resultados
+print("Con FMI y con número predial sin nro catastro:", con_fmi_con_num_predial_uit_sin_nro_catastro)
+print("Con FMI y sin número predial sin nro catastro:", con_fmi_sin_num_predial_uit_sin_nro_catastro)
+print("Sin FMI y con número predial sin nro catastro:", sin_fmi_con_num_predial_uit_sin_nro_catastro)
+print("Sin FMI y sin número predial sin nro catastro:", sin_fmi_sin_num_predial_uit_sin_nro_catastro)
+
+################
+print("")
+print("=================================================")
+print("** IMPRIMIR LOS RESULTADOS ++")
+print("=================================================")
+print("")
+#######################
+
+
+# Leer el archivo CSV especificando el tipo de datos como cadena para las columnas con tipos mixtos
+df = pd.read_csv("C:/Users/rdalb/Documents/ANT/Mayo 2024/PRE_MTJ_JUR_08052024v8.csv", dtype=str)
+
+################
+print("")
+print("=================================================")
+print("** MAPA DEL PREDIAGNÓSTICO TÉCNICO CATASTRAL++")
+print("=================================================")
+print("")
+#######################
+'''
+import geopandas as gpd
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Rutas a los archivos .shp y .csv
+ruta_UIT = "C:/Users/rdalb/Documents/ANT/Cartografía/UIT.shp"
+ruta_API = "C:/Users/rdalb/Documents/ANT/Cartografía/API_PREDIOS.shp"
+ruta_CSV = "C:/Users/rdalb/Documents/ANT/Mayo 2024/informe17052024v2.csv"
+
+# Cargar los archivos .shp y .csv
+UIT = gpd.read_file(ruta_UIT)
+API = gpd.read_file(ruta_API)
+CSV = pd.read_csv(ruta_CSV)
+
+# Realizar el join entre los conjuntos de datos
+API_join = API.merge(CSV, left_on='numero_pre', right_on='Número predial nacional (30 digitos)', how='left')
+
+# Filtrar el DataFrame para excluir filas con valores nulos en la columna 'Número predial nacional (30 digitos)'
+API_join = API_join[API_join['Número predial nacional (30 digitos)'].notnull()]
+
+# Crear el gráfico basado en la columna 'Estado del diagnóstico\ntécnico'
+API_join.plot(column='Estado del diagnóstico\ntécnico', legend=True)
+
+# Mostrar el gráfico
+plt.show()
+'''
+################
+print("")
+print("=================================================")
+print("** AVANCE PREDIAGNÓSTICO EQUIPO CATASTRAL ")
+print("=================================================")
+print("")
+#######################
+import geopandas as gpd
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+
+# Rutas a los archivos .shp y .csv
+ruta_UIT = "/content/UIT.shp"
+ruta_API = "/content/API_PREDIOS.shp"
+ruta_CSV = "/content/informe08052024v3.csv"
+
+# Cargar los archivos .shp y .csv
+UIT = gpd.read_file(ruta_UIT)
+API = gpd.read_file(ruta_API)
+CSV = pd.read_csv(ruta_CSV)
+
+# Realizar el join entre los conjuntos de datos
+API_join = API.merge(CSV, left_on='numero_pre', right_on='Número predial nacional (30 digitos)', how='left')
+
+# Filtrar el DataFrame para excluir filas con valores nulos en la columna 'Número predial nacional (30 digitos)'
+API_join = API_join[API_join['Número predial nacional (30 digitos)'].notnull()]
+
+# Asignar las celdas vacías como 'Pendiente' y colorearlas de rojo
+API_join['Estado del diagnóstico\ntécnico'].fillna('Pendiente', inplace=True)
+
+# Configurar el estilo de los polígonos en el mapa
+fig, ax = plt.subplots(figsize=(10, 10))
+API_join.plot(column='Estado del diagnóstico\ntécnico', legend=True, cmap='RdYlGn', ax=ax)
+
+# Superponer UIT.shp con borde negro y fondo transparente
+UIT.plot(ax=ax, edgecolor='black', facecolor='none', zorder=2)
+
+# Añadir título al mapa
+plt.title("AVANCE PREDIAGNÓSTICO EQUIPO CATASTRAL", fontsize=16)
+
+# Crear leyenda personalizada
+legend_elements = [
+    Line2D([0], [0], marker='o', color='green', label='Completo', markersize=10, linestyle='None'),
+    Line2D([0], [0], marker='o', color='yellow', label='Incompleto', markersize=10, linestyle='None'),
+    Line2D([0], [0], marker='o', color='red', label='Pendiente', markersize=10, linestyle='None')
+]
+
+# Mostrar leyenda
+ax.legend(handles=legend_elements, title='Estado del diagnóstico técnico', facecolor='white', loc='upper left')
+
+# Mostrar el gráfico
+plt.show()
